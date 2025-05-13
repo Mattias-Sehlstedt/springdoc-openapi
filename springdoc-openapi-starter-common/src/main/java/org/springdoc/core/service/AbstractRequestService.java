@@ -284,6 +284,10 @@ public abstract class AbstractRequestService {
 
 		JavadocProvider javadocProvider = parameterBuilder.getJavadocProvider();
 
+		if (parameters.length == 1 && Arrays.asList(methodAttributes.getMethodConsumes()).contains(APPLICATION_FORM_URLENCODED_VALUE)) {
+			// ensure that the lone method parameter is encoded as an ObjectSchema (rather than a primitive schema, e.g., StringSchema)
+		}
+
 		for (MethodParameter methodParameter : parameters) {
 			// check if query param
 			Parameter parameter;
