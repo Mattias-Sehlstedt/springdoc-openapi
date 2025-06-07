@@ -94,7 +94,8 @@
             "application/x-www-form-urlencoded": {
               "schema" : {
                 "required": [
-                  "id"
+                  "id1",
+                  "id2"
                 ],
                 "type": "object",
                 "properties": {

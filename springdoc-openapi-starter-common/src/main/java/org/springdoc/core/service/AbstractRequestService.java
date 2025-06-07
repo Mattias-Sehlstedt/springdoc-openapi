@@ -284,10 +284,6 @@ public abstract class AbstractRequestService {
 
 		JavadocProvider javadocProvider = parameterBuilder.getJavadocProvider();
 
-		if (parameters.length == 1 && Arrays.asList(methodAttributes.getMethodConsumes()).contains(APPLICATION_FORM_URLENCODED_VALUE)) {
-			// ensure that the lone method parameter is encoded as an ObjectSchema (rather than a primitive schema, e.g., StringSchema)
-		}
-
 		for (MethodParameter methodParameter : parameters) {
 			// check if query param
 			Parameter parameter;
@@ -349,6 +345,12 @@ public abstract class AbstractRequestService {
 
 		LinkedHashMap<ParameterId, Parameter> map = getParameterLinkedHashMap(components, methodAttributes, operationParameters, parametersDocMap);
 		RequestBody requestBody = requestBodyInfo.getRequestBody();
+
+		if (parameters.length == 1 && Arrays.asList(methodAttributes.getMethodConsumes()).contains(APPLICATION_FORM_URLENCODED_VALUE)) {
+			// ensure that the lone method parameter is encoded as an ObjectSchema (rather than a primitive schema, e.g., StringSchema)
+			requestBody.getContent().get(APPLICATION_FORM_URLENCODED_VALUE).setSchema(requestBodyInfo.getMergedSchema());
+		}
+
 		// support form-data
 		if (defaultSupportFormData && requestBody != null
 				&& requestBody.getContent() != null
