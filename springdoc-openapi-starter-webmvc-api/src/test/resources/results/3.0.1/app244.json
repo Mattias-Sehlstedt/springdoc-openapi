@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "admin api",
+    "version": "v1.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "local"
+    }
+  ],
+  "paths": {},
+  "components": {}
+}
