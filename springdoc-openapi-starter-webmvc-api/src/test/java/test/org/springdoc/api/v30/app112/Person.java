@@ -24,6 +24,7 @@
 
 package test.org.springdoc.api.v30.app112;
 
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -35,8 +36,10 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 
 
 public class Person {
+	@NotNull
 	private long id;
 
+	@Nonnull
 	private String firstName;
 
 	@NotNull

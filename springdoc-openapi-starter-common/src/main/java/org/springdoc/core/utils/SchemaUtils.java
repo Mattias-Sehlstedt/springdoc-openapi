@@ -54,7 +54,7 @@ public class SchemaUtils {
 	 */
 	// using string litterals to support both validation-api v1 and v2
 	public static final List<String> ANNOTATIONS_FOR_REQUIRED = Arrays.asList("NotNull", "NonNull", "NotBlank",
-			"NotEmpty");
+			"NotEmpty", "Nonnull");
 
 	/**
 	 * The constant OPTIONAL_TYPES.

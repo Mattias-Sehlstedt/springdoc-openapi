@@ -234,6 +234,7 @@
       },
       "Person": {
         "required": [
+          "id",
           "lastName"
         ],
         "type": "object",
