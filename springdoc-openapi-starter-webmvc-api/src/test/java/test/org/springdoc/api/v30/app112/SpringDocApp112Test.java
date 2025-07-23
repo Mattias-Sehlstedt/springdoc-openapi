@@ -24,9 +24,14 @@
 
 package test.org.springdoc.api.v30.app112;
 
+import io.swagger.v3.core.converter.AnnotatedType;
+import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.converter.ResolvedSchema;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import test.org.springdoc.api.v30.AbstractSpringDocV30Test;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -52,5 +57,21 @@ public class SpringDocApp112Test extends AbstractSpringDocV30Test {
 							.termsOfService("http://swagger.io/terms/")
 							.license(new License().name("Apache 2.0").url("http://springdoc.org")));
 		}
+	}
+
+	@Test
+	@Disabled
+	void test() {
+		ResolvedSchema resolvedSchema30 = ModelConverters.getInstance(true)
+				.resolveAsResolvedSchema(
+						new AnnotatedType(HelloWorldJson.class));
+	}
+
+	public record HelloWorldJson(
+			String message,
+			@jakarta.annotation.Nonnull String jakartaAnnotationNonnull,
+			@jakarta.validation.constraints.NotNull String jakartaValidationConstraintsNotNull,
+			@org.springframework.lang.NonNull  String orgSpringframeworkLangNonNull
+	) {
 	}
 }
