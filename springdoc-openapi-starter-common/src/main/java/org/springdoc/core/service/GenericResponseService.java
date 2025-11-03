@@ -26,30 +26,6 @@
 
 package org.springdoc.core.service;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.core.util.AnnotationsUtils;
 import io.swagger.v3.oas.models.Components;
@@ -70,7 +46,6 @@ import org.springdoc.core.providers.JavadocProvider;
 import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springdoc.core.utils.PropertyResolverUtils;
 import org.springdoc.core.utils.SpringDocAnnotationsUtils;
-
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -91,12 +66,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.method.HandlerMethod;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static java.util.Arrays.asList;
 import static org.springdoc.core.converters.ConverterUtils.isResponseTypeWrapper;
 import static org.springdoc.core.utils.Constants.DEFAULT_DESCRIPTION;
-import static org.springdoc.core.utils.SpringDocAnnotationsUtils.extractSchema;
-import static org.springdoc.core.utils.SpringDocAnnotationsUtils.getContent;
-import static org.springdoc.core.utils.SpringDocAnnotationsUtils.mergeSchema;
+import static org.springdoc.core.utils.SpringDocAnnotationsUtils.*;
 import static org.springdoc.core.utils.SpringDocUtils.cloneViaJson;
 import static org.springdoc.core.utils.SpringDocUtils.getParameterAnnotations;
 
@@ -309,17 +295,12 @@ public class GenericResponseService implements ApplicationContextAware {
 	public void buildGenericResponse(Components components, Map<String, Object> findControllerAdvice, Locale locale) {
 		// ControllerAdvice
 		for (Entry<String, Object> entry : findControllerAdvice.entrySet()) {
-			List<Method> methods = new ArrayList<>();
 			Object controllerAdvice = entry.getValue();
-			// get all methods with annotation @ExceptionHandler
 			Class<?> objClz = controllerAdvice.getClass();
 			if (AopUtils.isAopProxy(controllerAdvice))
 				objClz = AopUtils.getTargetClass(controllerAdvice);
+			List<Method> methods = getExceptionHandlerMethods(objClz);
 			ControllerAdviceInfo controllerAdviceInfo = new ControllerAdviceInfo(controllerAdvice);
-			Arrays.stream(ReflectionUtils.getAllDeclaredMethods(objClz))
-					.filter(m -> m.isAnnotationPresent(ExceptionHandler.class)
-							|| isResponseEntityExceptionHandlerMethod(m)
-					).forEach(methods::add);
 			// for each one build ApiResponse and add it to existing responses
 			for (Method method : methods) {
 				if (!operationService.isHidden(method)) {
@@ -356,6 +337,21 @@ public class GenericResponseService implements ApplicationContextAware {
 				localExceptionHandlers.add(controllerAdviceInfo);
 			}
 		}
+	}
+
+	/**
+	 * Get all methods annotated with @ExceptionHandler
+	 *
+	 * @param clazz The class
+	 * @return the methods
+	 */
+	private List<Method> getExceptionHandlerMethods(Class<?> clazz) {
+		List<Method> methods = new ArrayList<>();
+		Arrays.stream(ReflectionUtils.getAllDeclaredMethods(clazz))
+				.filter(m -> m.isAnnotationPresent(ExceptionHandler.class)
+							 || isResponseEntityExceptionHandlerMethod(m))
+				.forEach(methods::add);
+		return methods;
 	}
 
 	/**
@@ -731,18 +727,7 @@ public class GenericResponseService implements ApplicationContextAware {
 				List<MethodAdviceInfo> methodAdviceInfos = controllerAdviceInfo.getMethodAdviceInfos();
 				for (MethodAdviceInfo methodAdviceInfo : methodAdviceInfos) {
 					Set<Class<?>> exceptions = methodAdviceInfo.getExceptions();
-					boolean addToGenericMap = false;
-
-					for (Class<?> exception : exceptions) {
-						if (isGlobalException(exception) ||
-								Arrays.stream(methodExceptions).anyMatch(methodException ->
-										methodException.isAssignableFrom(exception) ||
-												exception.isAssignableFrom(methodException))) {
-
-							addToGenericMap = true;
-							break;
-						}
-					}
+					boolean addToGenericMap = addMethodAdviceToGenericMap(methodExceptions, exceptions);
 
 					if (addToGenericMap || exceptions.isEmpty()) {
 						methodAdviceInfo.getApiResponses().forEach((key, apiResponse) -> {
@@ -757,6 +742,25 @@ public class GenericResponseService implements ApplicationContextAware {
 		finally {
 			reentrantLock.unlock();
 		}
+	}
+
+	/**
+	 * Whether the advice should be added to the generic error map
+	 *
+	 * @param methodExceptions The exceptions that the method throws
+	 * @param exceptions the exceptions that the controller advice defines
+	 * @return the boolean
+	 */
+	private boolean addMethodAdviceToGenericMap(Class<?>[] methodExceptions, Set<Class<?>> exceptions) {
+		for (Class<?> exception : exceptions) {
+			if (isGlobalException(exception) ||
+				Arrays.stream(methodExceptions).anyMatch(methodException ->
+						methodException.isAssignableFrom(exception) ||
+						exception.isAssignableFrom(methodException))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
