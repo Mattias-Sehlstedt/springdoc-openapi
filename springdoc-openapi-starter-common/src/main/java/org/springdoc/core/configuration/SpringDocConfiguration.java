@@ -59,22 +59,7 @@ import org.springdoc.core.converters.PropertyCustomizingConverter;
 import org.springdoc.core.converters.ResponseSupportConverter;
 import org.springdoc.core.converters.SchemaPropertyDeprecatingConverter;
 import org.springdoc.core.converters.WebFluxSupportConverter;
-import org.springdoc.core.customizers.ActuatorOperationCustomizer;
-import org.springdoc.core.customizers.DataRestRouterOperationCustomizer;
-import org.springdoc.core.customizers.DelegatingMethodParameterCustomizer;
-import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
-import org.springdoc.core.customizers.GlobalOperationCustomizer;
-import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
-import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.springdoc.core.customizers.OperationCustomizer;
-import org.springdoc.core.customizers.OperationIdCustomizer;
-import org.springdoc.core.customizers.ParameterCustomizer;
-import org.springdoc.core.customizers.ParameterObjectNamingStrategyCustomizer;
-import org.springdoc.core.customizers.PropertyCustomizer;
-import org.springdoc.core.customizers.QuerydslPredicateOperationCustomizer;
-import org.springdoc.core.customizers.RouterOperationCustomizer;
-import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
-import org.springdoc.core.customizers.SpringDocCustomizers;
+import org.springdoc.core.customizers.*;
 import org.springdoc.core.discoverer.SpringDocParameterNameDiscoverer;
 import org.springdoc.core.events.SpringDocAppInitializer;
 import org.springdoc.core.extractor.MethodParameterPojoExtractor;
@@ -717,6 +702,18 @@ public class SpringDocConfiguration {
 	@Lazy(false)
 	MethodParameterPojoExtractor methodParameterPojoExtractor(SchemaUtils schemaUtils){
 		return new MethodParameterPojoExtractor(schemaUtils);
+	}
+
+	/**
+	 * Enum description operation customizer.
+	 *
+	 * @return the enum description operation customizer
+	 */
+	@Bean
+	@ConditionalOnMissingBean
+	@Lazy(false)
+	GlobalOperationCustomizer enumDescriptionOperationCustomizer() {
+		return new EnumDescriptionOperationCustomizer();
 	}
 
 	/**
