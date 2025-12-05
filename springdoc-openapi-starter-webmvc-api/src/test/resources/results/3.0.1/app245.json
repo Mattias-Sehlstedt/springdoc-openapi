@@ -1,0 +1,78 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "OpenAPI definition",
+    "version" : "v0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost",
+    "description" : "Generated server url"
+  } ],
+  "paths" : {
+    "/v1/endpoint" : {
+      "post" : {
+        "tags" : [ "hello-controller" ],
+        "operationId" : "endpoint",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SampleRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SampleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "SampleRequest" : {
+        "type" : "object",
+        "properties" : {
+          "hi" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "bye" : {
+            "type" : "number"
+          },
+          "field" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "SampleResponse" : {
+        "type" : "object",
+        "properties" : {
+          "field" : {
+            "type" : "boolean",
+            "description" : "field",
+            "example" : true
+          },
+          "count" : {
+            "type" : "integer",
+            "description" : "count",
+            "format" : "int32",
+            "example" : 22
+          },
+          "note" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
