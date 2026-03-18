@@ -35,7 +35,7 @@ public class HelloController {
 
 
 	@GetMapping(value = "/persons")
-	public ResponseEntity<List<List<PersonDTO>>> doGet() {
+	public ResponseEntity<List<PersonDTO>> doGet() {
 		return null;
 	}
 
