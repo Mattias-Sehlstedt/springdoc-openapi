@@ -29,8 +29,7 @@
             "content" : {
               "*/*" : {
                 "schema" : {
-                  "type" : "string",
-                  "format" : "uri"
+                  "$ref" : "#/components/schemas/DTO2"
                 }
               }
             }
@@ -42,6 +41,16 @@
   "components" : {
     "schemas" : {
       "DTO" : {
+        "required" : [ "field" ],
+        "type" : "object",
+        "properties" : {
+          "field" : {
+            "type" : "string",
+            "deprecated" : true
+          }
+        }
+      },
+      "DTO2" : {
         "required" : [ "field" ],
         "type" : "object",
         "properties" : {

@@ -31,17 +31,19 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-
 @RestController
 public class HelloController {
 
     @PostMapping("/items")
-    public ResponseEntity<URI> addItem(@Valid @RequestBody final DTO dto) {
+    public ResponseEntity<DTO2> addItem(@Valid @RequestBody final DTO dto) {
         return null;
     }
 
     public record DTO(@Deprecated @NotNull String field) {
+
+    }
+
+    public record DTO2(@NotNull String field) {
 
     }
 }
