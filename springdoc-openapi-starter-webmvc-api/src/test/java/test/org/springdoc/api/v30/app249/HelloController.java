@@ -43,7 +43,7 @@ public class HelloController {
 
     }
 
-    public record DTO2(@NotNull String field) {
+    public record DTO2(String field) {
 
     }
 }

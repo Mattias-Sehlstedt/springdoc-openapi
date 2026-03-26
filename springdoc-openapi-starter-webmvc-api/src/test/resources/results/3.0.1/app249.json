@@ -51,12 +51,10 @@
         }
       },
       "DTO2" : {
-        "required" : [ "field" ],
         "type" : "object",
         "properties" : {
           "field" : {
-            "type" : "string",
-            "deprecated" : true
+            "type" : "string"
           }
         }
       }
