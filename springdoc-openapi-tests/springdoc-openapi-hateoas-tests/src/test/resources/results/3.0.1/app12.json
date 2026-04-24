@@ -1,0 +1,184 @@
+{
+    "openapi" : "3.0.1",
+    "info" : {
+        "title" : "OpenAPI definition",
+        "version" : "v0"
+    },
+    "servers" : [ {
+        "url" : "http://localhost",
+        "description" : "Generated server url"
+    } ],
+    "tags" : [ {
+        "name" : "hateoas-controller",
+        "description" : "Hateoas Controller"
+    } ],
+    "paths" : {
+        "/items" : {
+            "get" : {
+                "tags" : [ "hateoas-controller" ],
+                "operationId" : "getItems",
+                "parameters" : [ {
+                    "name" : "assembler",
+                    "in" : "query",
+                    "required" : true,
+                    "schema" : {
+                        "$ref" : "#/components/schemas/PagedResourcesAssemblerMyDto"
+                    }
+                }, {
+                    "name" : "pageable",
+                    "in" : "query",
+                    "required" : true,
+                    "schema" : {
+                        "$ref" : "#/components/schemas/Pageable"
+                    }
+                } ],
+                "responses" : {
+                    "200" : {
+                        "description" : "OK",
+                        "content" : {
+                            "*/*" : {
+                                "schema" : {
+                                    "$ref" : "#/components/schemas/PagedModelEntityModelMyDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components" : {
+        "schemas" : {
+            "PagedResourcesAssemblerMyDto" : {
+                "type" : "object",
+                "properties" : {
+                    "forceFirstAndLastRels" : {
+                        "type" : "boolean",
+                        "writeOnly" : true
+                    }
+                }
+            },
+            "Pageable" : {
+                "type" : "object",
+                "properties" : {
+                    "page" : {
+                        "minimum" : 0,
+                        "type" : "integer",
+                        "format" : "int32"
+                    },
+                    "size" : {
+                        "minimum" : 1,
+                        "type" : "integer",
+                        "format" : "int32"
+                    },
+                    "sort" : {
+                        "type" : "array",
+                        "items" : {
+                            "type" : "string"
+                        }
+                    }
+                }
+            },
+            "EntityModelMyDto" : {
+                "type" : "object",
+                "properties" : {
+                    "name" : {
+                        "type" : "string"
+                    },
+                    "count" : {
+                        "type" : "integer",
+                        "format" : "int32"
+                    },
+                    "_links" : {
+                        "$ref" : "#/components/schemas/Links"
+                    }
+                }
+            },
+            "PageMetadata" : {
+                "type" : "object",
+                "properties" : {
+                    "size" : {
+                        "type" : "integer",
+                        "format" : "int64"
+                    },
+                    "totalElements" : {
+                        "type" : "integer",
+                        "format" : "int64"
+                    },
+                    "totalPages" : {
+                        "type" : "integer",
+                        "format" : "int64"
+                    },
+                    "number" : {
+                        "type" : "integer",
+                        "format" : "int64"
+                    }
+                },
+                "nullable" : true
+            },
+            "PagedModelEntityModelMyDto" : {
+                "type" : "object",
+                "properties" : {
+                    "_embedded" : {
+                        "type" : "object",
+                        "properties" : {
+                            "myDtoList" : {
+                                "type" : "array",
+                                "items" : {
+                                    "$ref" : "#/components/schemas/EntityModelMyDto"
+                                }
+                            }
+                        }
+                    },
+                    "_links" : {
+                        "$ref" : "#/components/schemas/Links"
+                    },
+                    "page" : {
+                        "$ref" : "#/components/schemas/PageMetadata"
+                    }
+                }
+            },
+            "Link" : {
+                "type" : "object",
+                "properties" : {
+                    "href" : {
+                        "type" : "string"
+                    },
+                    "hreflang" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "title" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "type" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "deprecation" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "profile" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "name" : {
+                        "type" : "string",
+                        "nullable" : true
+                    },
+                    "templated" : {
+                        "type" : "boolean"
+                    }
+                }
+            },
+            "Links" : {
+                "type" : "object",
+                "additionalProperties" : {
+                    "$ref" : "#/components/schemas/Link"
+                }
+            }
+        }
+    }
+}
