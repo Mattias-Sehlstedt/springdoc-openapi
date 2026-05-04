@@ -68,7 +68,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "exclusiveMinimum": 0
+              "exclusiveMinimum": 0,
+              "minimum": 0
             }
           }
         ],
