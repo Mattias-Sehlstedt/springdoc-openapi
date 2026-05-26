@@ -62,6 +62,8 @@ import static java.util.stream.Collectors.toMap;
  */
 public class PolymorphicModelConverter implements ModelConverter {
 
+	private static final String LINKS = "_links";
+
 	/**
 	 * The constant PARENT_TYPES_TO_IGNORE.
 	 */
@@ -136,7 +138,7 @@ public class PolymorphicModelConverter implements ModelConverter {
                 Schema childSchema = allOf.get(i);
                 if (childSchema != null && childSchema.getProperties() != null) {
                     // Remove _links (inherited from parent)
-                    childSchema.getProperties().remove("_links");
+                    childSchema.getProperties().remove(LINKS);
                 }
             }
         }
@@ -170,9 +172,7 @@ public class PolymorphicModelConverter implements ModelConverter {
 				Schema<?> resolvedSchema = chain.next().resolve(type, context, chain);
 				resolvedSchema = getResolvedSchema(javaType, resolvedSchema);
 
-                if (resolvedSchema instanceof ComposedSchema composedSchema &&
-                        composedSchema.getAllOf() != null &&
-                        !composedSchema.getAllOf().isEmpty()) {
+                if (resolvedSchema instanceof ComposedSchema composedSchema && hasAllOf(composedSchema)) {
                     removeLinksFromAllOfChild(composedSchema);
                 }
 
@@ -203,19 +203,24 @@ public class PolymorphicModelConverter implements ModelConverter {
 	private Schema composePolymorphicSchema(AnnotatedType type, Schema schema, Collection<Schema> schemas) {
 		String ref = schema.get$ref();
 		List<Schema> composedSchemas = findComposedSchemas(ref, schemas);
-		if (composedSchemas.isEmpty()) return schema;
+		if (composedSchemas.isEmpty()) {
+			return schema;
+		}
         ComposedSchema result = new ComposedSchema();
-		if (isConcreteClass(type)) result.addOneOfItem(schema);
+		if (isConcreteClass(type)) {
+			result.addOneOfItem(schema);
+		}
 		JavaType javaType = springDocObjectMapper.jsonMapper().constructType(type.getType());
 		Class<?> clazz = javaType.getRawClass();
-		if (TYPES_TO_SKIP.stream().noneMatch(typeToSkip -> typeToSkip.equals(clazz.getSimpleName())))
+		if (TYPES_TO_SKIP.stream().noneMatch(typeToSkip -> typeToSkip.equals(clazz.getSimpleName()))) {
 			composedSchemas.forEach(result::addOneOfItem);
+		}
 
         // Remove _links from result (composed schema) to prevent duplication
         if (result.getOneOf() != null) {
             result.getOneOf().stream()
                     .filter(s -> s.getProperties() != null)
-                    .forEach(s -> s.getProperties().remove("_links"));
+                    .forEach(s -> s.getProperties().remove(LINKS));
         }
 
         return result;
@@ -352,5 +357,9 @@ public class PolymorphicModelConverter implements ModelConverter {
 
 			return null;
 		}
+	}
+
+	private boolean hasAllOf(Schema<?> schema) {
+		return schema.getAllOf() != null && !schema.getAllOf().isEmpty();
 	}
 }
