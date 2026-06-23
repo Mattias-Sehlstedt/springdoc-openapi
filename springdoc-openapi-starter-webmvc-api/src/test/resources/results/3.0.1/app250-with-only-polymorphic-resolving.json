@@ -76,13 +76,6 @@
           }
         } ]
       },
-      "ChildVariant" : {
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/ChildA"
-        }, {
-          "$ref" : "#/components/schemas/ChildB"
-        } ]
-      },
       "ChildWrapper1" : {
         "type" : "object",
         "properties" : {
@@ -90,7 +83,11 @@
             "type" : "string"
           },
           "child" : {
-            "$ref" : "#/components/schemas/ChildVariant"
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/ChildA"
+            }, {
+              "$ref" : "#/components/schemas/ChildB"
+            } ]
           }
         }
       },
@@ -101,7 +98,11 @@
             "type" : "string"
           },
           "child" : {
-            "$ref" : "#/components/schemas/ChildVariant"
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/ChildA"
+            }, {
+              "$ref" : "#/components/schemas/ChildB"
+            } ]
           }
         }
       },

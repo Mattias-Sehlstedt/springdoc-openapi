@@ -21,7 +21,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.test.context.TestPropertySource;
 import test.org.springdoc.api.v30.AbstractSpringDocV30Test;
 
-@TestPropertySource(properties = Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED + "=true")
+@TestPropertySource(properties = {
+		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED + "=true",
+		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF + "=true"
+})
 public class SpringDocApp250Test extends AbstractSpringDocV30Test {
 
 	@SpringBootApplication
