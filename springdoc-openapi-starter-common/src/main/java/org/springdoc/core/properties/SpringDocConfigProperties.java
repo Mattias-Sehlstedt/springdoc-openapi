@@ -1287,6 +1287,11 @@ public class SpringDocConfigProperties {
 			private boolean enabled;
 
 			/**
+			 * Emit discovered polymorphic oneOf schemas as reusable component refs.
+			 */
+			private boolean oneOfAsRef;
+
+			/**
 			 * Is enabled boolean.
 			 *
 			 * @return the boolean
@@ -1302,6 +1307,24 @@ public class SpringDocConfigProperties {
 			 */
 			public void setEnabled(boolean enabled) {
 				this.enabled = enabled;
+			}
+
+			/**
+			 * Is one of as ref boolean.
+			 *
+			 * @return the boolean
+			 */
+			public boolean isOneOfAsRef() {
+				return oneOfAsRef;
+			}
+
+			/**
+			 * Sets one of as ref.
+			 *
+			 * @param oneOfAsRef the one of as ref
+			 */
+			public void setOneOfAsRef(boolean oneOfAsRef) {
+				this.oneOfAsRef = oneOfAsRef;
 			}
 		}
 

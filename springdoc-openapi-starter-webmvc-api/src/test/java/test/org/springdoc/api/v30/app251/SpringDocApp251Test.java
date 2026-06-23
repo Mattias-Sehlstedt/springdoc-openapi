@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.org.springdoc.api.v30.app250;
+package test.org.springdoc.api.v30.app251;
 
 import org.springdoc.core.utils.Constants;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,9 +23,9 @@ import test.org.springdoc.api.v30.AbstractSpringDocV30Test;
 
 @TestPropertySource(properties = {
 		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED + "=true",
-		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF + "=true"
+		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF + "=false"
 })
-public class SpringDocApp250Test extends AbstractSpringDocV30Test {
+public class SpringDocApp251Test extends AbstractSpringDocV30Test {
 
 	@SpringBootApplication
 	static class SpringDocTestApp {

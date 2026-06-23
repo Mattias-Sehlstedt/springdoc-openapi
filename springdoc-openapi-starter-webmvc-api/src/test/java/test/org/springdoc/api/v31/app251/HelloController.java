@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package test.org.springdoc.api.v30.app250;
+package test.org.springdoc.api.v31.app251;
 
-import org.springdoc.core.utils.Constants;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.test.context.TestPropertySource;
-import test.org.springdoc.api.v30.AbstractSpringDocV30Test;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import test.org.springdoc.api.v30.app251.Request;
 
-@TestPropertySource(properties = {
-		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED + "=true",
-		Constants.SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF + "=true"
-})
-public class SpringDocApp250Test extends AbstractSpringDocV30Test {
+@RestController
+public class HelloController {
 
-	@SpringBootApplication
-	static class SpringDocTestApp {
+	@GetMapping("/items")
+	public Request get() {
+		return null;
 	}
 }

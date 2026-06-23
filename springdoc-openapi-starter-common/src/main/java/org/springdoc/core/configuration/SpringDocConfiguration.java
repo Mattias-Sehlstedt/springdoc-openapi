@@ -285,8 +285,8 @@ public class SpringDocConfiguration {
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(name = SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED, matchIfMissing = true)
 	@Lazy(false)
-	PolymorphicModelConverter polymorphicModelConverter(ObjectMapperProvider objectMapperProvider) {
-		return new PolymorphicModelConverter(objectMapperProvider);
+	PolymorphicModelConverter polymorphicModelConverter(ObjectMapperProvider objectMapperProvider, SpringDocConfigProperties springDocConfigProperties) {
+		return new PolymorphicModelConverter(objectMapperProvider, springDocConfigProperties.getModelConverters().getPolymorphicConverter().isOneOfAsRef());
 	}
 
 	/**

@@ -107,6 +107,11 @@ public final class Constants {
 	public static final String SPRINGDOC_POLYMORPHIC_CONVERTER_ENABLED = "springdoc.model-converters.polymorphic-converter.enabled";
 
 	/**
+	 * The constant SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF.
+	 */
+	public static final String SPRINGDOC_POLYMORPHIC_CONVERTER_ONE_OF_AS_REF = "springdoc.model-converters.polymorphic-converter.one-of-as-ref";
+
+	/**
 	 * The constant SPRINGDOC_SCHEMA_RESOLVE_PROPERTIES.
 	 */
 	public static final String SPRINGDOC_SCHEMA_RESOLVE_PROPERTIES = "springdoc.api-docs.resolve-schema-properties";

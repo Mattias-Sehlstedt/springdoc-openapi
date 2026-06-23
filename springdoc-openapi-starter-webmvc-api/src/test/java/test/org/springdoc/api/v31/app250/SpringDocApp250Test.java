@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.org.springdoc.api.v30.app250;
+package test.org.springdoc.api.v31.app250;
 
 import org.springdoc.core.utils.Constants;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
