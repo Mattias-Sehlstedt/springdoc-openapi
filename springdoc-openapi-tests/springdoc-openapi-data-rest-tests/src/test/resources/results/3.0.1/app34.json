@@ -1284,8 +1284,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelEntityModelCustomer": {
                 "type": "object",

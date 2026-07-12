@@ -357,8 +357,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelEntityModelPerson": {
                 "type": "object",

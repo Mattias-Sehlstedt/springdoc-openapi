@@ -348,8 +348,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelEntityModelChildProperty": {
                 "type": "object",

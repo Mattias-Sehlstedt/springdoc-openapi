@@ -2015,7 +2015,7 @@
                 ]
             },
             "PageMetadata": {
-                "type": "null",
+                "type": "object",
                 "properties": {
                     "size": {
                         "type": "integer",

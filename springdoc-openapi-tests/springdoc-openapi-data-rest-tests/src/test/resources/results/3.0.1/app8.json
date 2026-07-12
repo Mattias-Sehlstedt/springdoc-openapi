@@ -67,8 +67,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelAlbum": {
                 "type": "object",

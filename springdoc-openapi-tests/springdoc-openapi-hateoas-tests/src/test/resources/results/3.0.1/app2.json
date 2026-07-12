@@ -106,8 +106,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelEntityModelPost": {
                 "type": "object",

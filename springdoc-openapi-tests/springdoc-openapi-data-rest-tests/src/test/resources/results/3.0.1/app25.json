@@ -2228,8 +2228,7 @@
                         "type": "integer",
                         "format": "int64"
                     }
-                },
-                "nullable": true
+                }
             },
             "PagedModelEntityModelPet": {
                 "type": "object",
