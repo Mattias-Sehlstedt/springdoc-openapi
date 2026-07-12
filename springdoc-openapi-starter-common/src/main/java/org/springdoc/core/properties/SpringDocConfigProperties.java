@@ -1190,6 +1190,11 @@ public class SpringDocConfigProperties {
 		 */
 		private PolymorphicConverter polymorphicConverter = new PolymorphicConverter();
 
+		/**
+		 * The Kotlin nullable property customizer.
+		 */
+		private KotlinNullablePropertyCustomizerConfig kotlinNullablePropertyCustomizer = new KotlinNullablePropertyCustomizerConfig();
+
 
 		/**
 		 * Gets deprecating converter.
@@ -1246,6 +1251,24 @@ public class SpringDocConfigProperties {
 		}
 
 		/**
+		 * Gets kotlin nullable property customizer.
+		 *
+		 * @return the kotlin nullable property customizer
+		 */
+		public KotlinNullablePropertyCustomizerConfig getKotlinNullablePropertyCustomizer() {
+			return kotlinNullablePropertyCustomizer;
+		}
+
+		/**
+		 * Sets kotlin nullable property customizer.
+		 *
+		 * @param kotlinNullablePropertyCustomizer the kotlin nullable property customizer
+		 */
+		public void setKotlinNullablePropertyCustomizer(KotlinNullablePropertyCustomizerConfig kotlinNullablePropertyCustomizer) {
+			this.kotlinNullablePropertyCustomizer = kotlinNullablePropertyCustomizer;
+		}
+
+		/**
 		 * The type Deprecating converter.
 		 *
 		 * @author bnasslashen
@@ -1285,6 +1308,36 @@ public class SpringDocConfigProperties {
 			 * The Enabled.
 			 */
 			private boolean enabled;
+
+			/**
+			 * Is enabled boolean.
+			 *
+			 * @return the boolean
+			 */
+			public boolean isEnabled() {
+				return enabled;
+			}
+
+			/**
+			 * Sets enabled.
+			 *
+			 * @param enabled the enabled
+			 */
+			public void setEnabled(boolean enabled) {
+				this.enabled = enabled;
+			}
+		}
+
+
+		/**
+		 * The type Kotlin nullable property customizer.
+		 */
+		public static class KotlinNullablePropertyCustomizerConfig {
+
+			/**
+			 * The Enabled.
+			 */
+			private boolean enabled = true;
 
 			/**
 			 * Is enabled boolean.
