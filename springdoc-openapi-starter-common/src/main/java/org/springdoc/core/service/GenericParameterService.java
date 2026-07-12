@@ -651,6 +651,15 @@ public class GenericParameterService {
 	}
 
 	/**
+	 * Gets object mapper provider.
+	 *
+	 * @return the object mapper provider
+	 */
+	public ObjectMapperProvider getObjectMapperProvider() {
+		return objectMapperProvider;
+	}
+
+	/**
 	 * Gets optional web conversion service provider.
 	 *
 	 * @return the optional web conversion service provider
