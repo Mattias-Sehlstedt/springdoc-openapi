@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -180,40 +179,6 @@ public class SpringDocUtils {
 			if (schema.getProperties() != null) {
 				schema.getProperties().forEach((key, value) -> handleSchemaTypes(value));
 			}
-			fixNullOnlyAdditionalProperties(schema);
-		}
-	}
-
-	/**
-	 * Fix additionalProperties incorrectly set to {"type": "null"} when @Nullable
-	 * propagates from a Map field to its Object value type (resolved as "any type" = {}).
-	 * <p>
-	 * Tracked under <a href="https://github.com/swagger-api/swagger-core/issues/5115">swagger-core#5115</a>.
-	 *
-	 * @param schema the schema to fix
-	 */
-	public static void fixNullOnlyAdditionalProperties(Schema<?> schema) {
-		if (schema == null) {
-			return;
-		}
-		Object additionalProperties = schema.getAdditionalProperties();
-		if (additionalProperties instanceof Schema<?> addPropSchema) {
-			boolean isNullOnlyType = false;
-			Set<String> types = addPropSchema.getTypes();
-			if (types != null && types.size() == 1 && types.contains("null")) {
-				isNullOnlyType = true;
-			}
-			else if (types == null && "null".equals(addPropSchema.getType())) {
-				isNullOnlyType = true;
-			}
-			if (isNullOnlyType && addPropSchema.get$ref() == null
-					&& addPropSchema.getProperties() == null && addPropSchema.getFormat() == null) {
-				addPropSchema.setTypes(null);
-				addPropSchema.setType(null);
-			}
-		}
-		if (schema.getProperties() != null) {
-			schema.getProperties().values().forEach(prop -> fixNullOnlyAdditionalProperties((Schema<?>) prop));
 		}
 	}
 
