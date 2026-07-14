@@ -89,11 +89,6 @@ public abstract class SwaggerWelcomeCommon extends AbstractSwaggerWelcome {
 		}
 	}
 
-	@Override
-	protected void calculateUiRootPath(SwaggerUiConfigParameters swaggerUiConfigParameters, StringBuilder... sbUrls) {
-		super.calculateUiRootPath(swaggerUiConfigParameters, sbUrls);
-	}
-
 	/**
 	 * Gets swagger ui config.
 	 *
@@ -104,6 +99,11 @@ public abstract class SwaggerWelcomeCommon extends AbstractSwaggerWelcome {
 		SwaggerUiConfigParameters swaggerUiConfigParameters = new SwaggerUiConfigParameters(swaggerUiConfig);
 		this.buildFromCurrentContextPath(swaggerUiConfigParameters, exchange);
 		return swaggerUiConfigParameters.getConfigParameters();
+	}
+
+	@Override
+	protected void calculateUiRootPath(SwaggerUiConfigParameters swaggerUiConfigParameters, StringBuilder... sbUrls) {
+		super.calculateUiRootPath(swaggerUiConfigParameters, sbUrls);
 	}
 
 	/**

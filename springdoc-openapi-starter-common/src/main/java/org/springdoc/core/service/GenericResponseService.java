@@ -760,8 +760,7 @@ public class GenericResponseService implements ApplicationContextAware {
 					}
 
 					if (addToGenericMap || exceptions.isEmpty()) {
-						methodAdviceInfo.getApiResponses().forEach((key, apiResponse) ->
-								genericApiResponseMap.putIfAbsent(key, apiResponse));
+						methodAdviceInfo.getApiResponses().forEach(genericApiResponseMap::putIfAbsent);
 					}
 				}
 			}

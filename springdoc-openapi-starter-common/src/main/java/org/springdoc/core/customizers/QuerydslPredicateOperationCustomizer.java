@@ -57,8 +57,6 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.QuerydslBindingsFactory;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.util.CastUtils;
-import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -174,12 +172,12 @@ public class QuerydslPredicateOperationCustomizer implements GlobalOperationCust
 	 * @return the querydsl bindings
 	 */
 	private QuerydslBindings extractQdslBindings(QuerydslPredicate predicate) {
-		ClassTypeInformation<?> classTypeInformation = ClassTypeInformation.from(predicate.root());
-		TypeInformation<?> domainType = classTypeInformation.getRequiredActualType();
+		TypeInformation<?> typeInformation = TypeInformation.of(predicate.root());
+		TypeInformation<?> domainType = typeInformation.getRequiredActualType();
 
 		Optional<Class<? extends QuerydslBinderCustomizer<?>>> bindingsAnnotation = Optional.of(predicate)
 				.map(QuerydslPredicate::bindings)
-				.map(CastUtils::cast);
+				.map(binder -> (Class<? extends QuerydslBinderCustomizer<?>>) binder);
 
 		return bindingsAnnotation
 				.map(it -> querydslBindingsFactory.createBindingsFor(domainType, it))

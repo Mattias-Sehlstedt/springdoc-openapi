@@ -26,7 +26,6 @@
 
 package org.springdoc.core.service;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -256,7 +255,7 @@ public class RequestBodyService {
 	 */
 	public void calculateRequestBodyInfo(Components components, MethodAttributes methodAttributes,
 			ParameterInfo parameterInfo, RequestBodyInfo requestBodyInfo) {
-		RequestBody requestBody = requestBodyInfo.getRequestBody();
+		RequestBody requestBody;
 		MethodParameter methodParameter = parameterInfo.getMethodParameter();
 
 
