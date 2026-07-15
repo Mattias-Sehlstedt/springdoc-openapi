@@ -445,8 +445,7 @@ public class MethodAttributes {
 				}
 				else {
 					String key = header.substring(0, neqIdx);
-					if (!this.headers.containsKey(key))
-						this.headers.put(key, StringUtils.EMPTY);
+					this.headers.putIfAbsent(key, StringUtils.EMPTY);
 				}
 			}
 	}
