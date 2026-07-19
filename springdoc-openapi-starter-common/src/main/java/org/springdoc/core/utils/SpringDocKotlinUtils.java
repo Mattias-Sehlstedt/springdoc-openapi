@@ -48,6 +48,8 @@ import org.springframework.core.KotlinDetector;
 public class SpringDocKotlinUtils {
 
 	public SpringDocKotlinUtils() {
+		// Empty constructor required so this class can be registered as a Spring bean
+		// (its presence gates Kotlin-specific nullability handling in SchemaUtils).
 	}
 
 	/**
