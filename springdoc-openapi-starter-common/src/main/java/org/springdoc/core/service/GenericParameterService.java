@@ -447,7 +447,7 @@ public class GenericParameterService {
 				&& KotlinDetector.isKotlinReflectPresent()
 				&& KotlinDetector.isKotlinType(methodParameter.getContainingClass())
 				&& type == String.class) {
-			Class<?> restored = KotlinInlineParameterResolver.resolveInlineType(methodParameter, type);
+			Class<?> restored = KotlinInlineParameterResolver.resolveInlineType(methodParameter);
 			return restored != null
 					? new TypeAndTypeAnnotations(restored, Arrays.asList(restored.getAnnotations()))
 					: new TypeAndTypeAnnotations(type, new ArrayList<>());

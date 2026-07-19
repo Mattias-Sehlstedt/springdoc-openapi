@@ -28,7 +28,6 @@ package org.springdoc.core.converters;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 
 import kotlin.jvm.JvmInline;
 import kotlin.reflect.KClass;
@@ -47,7 +46,7 @@ public final class KotlinInlineParameterResolver {
 
 	private KotlinInlineParameterResolver() {}
 
-	public static Class<?> resolveInlineType(MethodParameter methodParameter, Type type) {
+	public static Class<?> resolveInlineType(MethodParameter methodParameter) {
 		Method method = methodParameter.getMethod();
 		if (method == null) return null;
 

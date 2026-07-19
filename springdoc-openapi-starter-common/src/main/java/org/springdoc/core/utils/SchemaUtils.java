@@ -206,17 +206,19 @@ public class SchemaUtils {
 		}
 
 		// Kotlin logic
-		if (kotlinUtilsOptional.isPresent()  && isKotlinDeclaringClass(field)) {
-			if (fieldNullable(field)) return false;
-            return kotlinConstructorParamIsOptional(field)
+		if (kotlinUtilsOptional.isPresent() && isKotlinDeclaringClass(field)) {
+			if (fieldNullable(field)) {
+				return false;
+			}
+			return kotlinConstructorParamIsOptional(field)
 					.map(isOptional -> !isOptional)
 					.orElse(true);
-        }
+		}
 
 		// Jackson @JsonProperty(required = true)
 		JsonProperty jp = getJsonProperty(field);
-        return jp != null && jp.required();
-    }
+		return jp != null && jp.required();
+	}
 
 	/**
 	 * Apply validations to schema. the annotation order effects the result of the

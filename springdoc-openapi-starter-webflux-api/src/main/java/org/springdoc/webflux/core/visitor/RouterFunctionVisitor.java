@@ -72,8 +72,7 @@ public class RouterFunctionVisitor extends AbstractRouterFunctionVisitor impleme
 
 	@Override
 	public void resources(Function<ServerRequest, Mono<Resource>> lookupFunction) {
-        if ("org.springframework.web.reactive.function.server.PathResourceLookupFunction"
-				.equals(lookupFunction.getClass().getName())) {
+        if ("PathResourceLookupFunction".equals(lookupFunction.getClass().getSimpleName())) {
             Field patternField = ReflectionUtils.findField(lookupFunction.getClass(), "pattern");
             if (patternField != null) {
                 ReflectionUtils.makeAccessible(patternField);
