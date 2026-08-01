@@ -38,6 +38,7 @@ import java.util.Set;
 
 import io.swagger.v3.core.util.AnnotationsUtils;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.security.OAuthFlow;
@@ -260,21 +261,32 @@ public class SecurityService {
 		if (StringUtils.isNotBlank(securityScheme.paramName()))
 			securitySchemeObject.setName(securityScheme.paramName());
 
-		if (securityScheme.extensions().length > 0) {
-			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), securityScheme.extensions());
-			if (propertyResolverUtils.isResolveExtensionsProperties()) {
-				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
-				extensionsResolved.forEach(securitySchemeObject::addExtension);
-			}
-			else {
-				extensions.forEach(securitySchemeObject::addExtension);
-			}
-		}
+		setExtensions(securityScheme.extensions(), securitySchemeObject, locale);
 
 		getOAuthFlows(securityScheme.flows(), locale).ifPresent(securitySchemeObject::setFlows);
 
 		SecuritySchemePair result = new SecuritySchemePair(key, securitySchemeObject);
 		return Optional.of(result);
+	}
+
+	/**
+	 * Sets extensions.
+	 *
+	 * @param annotationExtensions the extension annotations
+	 * @param securityScheme       the securityScheme
+	 * @param locale               the locale
+	 */
+	private void setExtensions(Extension[] annotationExtensions, SecurityScheme securityScheme, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
+			if (propertyResolverUtils.isResolveExtensionsProperties()) {
+				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
+				extensionsResolved.forEach(securityScheme::addExtension);
+			}
+			else {
+				extensions.forEach(securityScheme::addExtension);
+			}
+		}
 	}
 
 	/**
@@ -303,8 +315,24 @@ public class SecurityService {
 			return Optional.empty();
 
 		OAuthFlows oAuthFlowsObject = new OAuthFlows();
-		if (oAuthFlows.extensions().length > 0) {
-			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), oAuthFlows.extensions());
+		setExtensions(oAuthFlows.extensions(), oAuthFlowsObject, locale);
+		getOAuthFlow(oAuthFlows.authorizationCode(), locale).ifPresent(oAuthFlowsObject::setAuthorizationCode);
+		getOAuthFlow(oAuthFlows.clientCredentials(), locale).ifPresent(oAuthFlowsObject::setClientCredentials);
+		getOAuthFlow(oAuthFlows.implicit(), locale).ifPresent(oAuthFlowsObject::setImplicit);
+		getOAuthFlow(oAuthFlows.password(), locale).ifPresent(oAuthFlowsObject::setPassword);
+		return Optional.of(oAuthFlowsObject);
+	}
+
+	/**
+	 * Sets extensions.
+	 *
+	 * @param annotationExtensions the extension annotations
+	 * @param oAuthFlowsObject     the oAuthFlowsObject
+	 * @param locale               the locale
+	 */
+	private void setExtensions(Extension[] annotationExtensions, OAuthFlows oAuthFlowsObject, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
 			if (propertyResolverUtils.isResolveExtensionsProperties()) {
 				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
 				extensionsResolved.forEach(oAuthFlowsObject::addExtension);
@@ -313,11 +341,6 @@ public class SecurityService {
 				extensions.forEach(oAuthFlowsObject::addExtension);
 			}
 		}
-		getOAuthFlow(oAuthFlows.authorizationCode(), locale).ifPresent(oAuthFlowsObject::setAuthorizationCode);
-		getOAuthFlow(oAuthFlows.clientCredentials(), locale).ifPresent(oAuthFlowsObject::setClientCredentials);
-		getOAuthFlow(oAuthFlows.implicit(), locale).ifPresent(oAuthFlowsObject::setImplicit);
-		getOAuthFlow(oAuthFlows.password(), locale).ifPresent(oAuthFlowsObject::setPassword);
-		return Optional.of(oAuthFlowsObject);
 	}
 
 	/**
@@ -341,8 +364,21 @@ public class SecurityService {
 		if (StringUtils.isNotBlank(oAuthFlow.tokenUrl()))
 			oAuthFlowObject.setTokenUrl(propertyResolverUtils.resolve(oAuthFlow.tokenUrl(), locale));
 
-		if (oAuthFlow.extensions().length > 0) {
-			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), oAuthFlow.extensions());
+		setExtensions(oAuthFlow.extensions(), oAuthFlowObject, locale);
+		getScopes(oAuthFlow.scopes()).ifPresent(oAuthFlowObject::setScopes);
+		return Optional.of(oAuthFlowObject);
+	}
+
+	/**
+	 * Sets extensions.
+	 *
+	 * @param annotationExtensions the extension annotations
+	 * @param oAuthFlowObject      the oAuthFlowObject
+	 * @param locale               the locale
+	 */
+	private void setExtensions(Extension[] annotationExtensions, OAuthFlow oAuthFlowObject, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
 			if (propertyResolverUtils.isResolveExtensionsProperties()) {
 				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
 				extensionsResolved.forEach(oAuthFlowObject::addExtension);
@@ -351,8 +387,6 @@ public class SecurityService {
 				extensions.forEach(oAuthFlowObject::addExtension);
 			}
 		}
-		getScopes(oAuthFlow.scopes()).ifPresent(oAuthFlowObject::setScopes);
-		return Optional.of(oAuthFlowObject);
 	}
 
 	/**

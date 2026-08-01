@@ -39,6 +39,7 @@ import java.util.Set;
 
 import io.swagger.v3.core.util.AnnotationsUtils;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -166,7 +167,7 @@ public class OperationService {
 		securityParser.buildSecurityRequirement(apiOperation.security(), operation);
 
 		// Extensions in Operation
-		buildExtensions(apiOperation, operation, locale);
+		setExtensions(apiOperation.extensions(), operation, locale);
 		return openAPI;
 	}
 
@@ -255,15 +256,15 @@ public class OperationService {
 	}
 
 	/**
-	 * Build extensions.
+	 * Sets extensions.
 	 *
-	 * @param apiOperation the api operation
-	 * @param operation    the operation
-	 * @param locale       the locale
+     * @param annotationExtensions the extension annotations
+	 * @param operation            the operation
+	 * @param locale               the locale
 	 */
-	private void buildExtensions(io.swagger.v3.oas.annotations.Operation apiOperation, Operation operation, Locale locale) {
-		if (apiOperation.extensions().length > 0) {
-			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), apiOperation.extensions());
+	private void setExtensions(Extension[] annotationExtensions, Operation operation, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
 			if (propertyResolverUtils.isResolveExtensionsProperties()) {
 				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
 				extensionsResolved.forEach(operation::addExtension);
@@ -317,7 +318,7 @@ public class OperationService {
 				continue;
 			}
 			setDescription(response, apiResponseObject, methodAttributes.getJavadocReturn());
-			setExtensions(response, apiResponseObject, methodAttributes.getLocale());
+			setExtensions(response.extensions(), apiResponseObject, methodAttributes.getLocale());
 
 			buildResponseContent(methodAttributes, components, classProduces, methodProduces, apiResponsesOp, response, apiResponseObject);
 
@@ -443,14 +444,13 @@ public class OperationService {
 	/**
 	 * Sets extensions.
 	 *
-	 * @param response          the response
-	 * @param apiResponseObject the api response object
-	 * @param locale            the locale
+	 * @param annotationExtensions the extension annotations
+	 * @param apiResponseObject    the api response object
+	 * @param locale               the locale
 	 */
-	private void setExtensions(io.swagger.v3.oas.annotations.responses.ApiResponse response,
-			ApiResponse apiResponseObject, Locale locale) {
-		if (response.extensions().length > 0) {
-			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), response.extensions());
+	private void setExtensions(Extension[] annotationExtensions, ApiResponse apiResponseObject, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
 			if (propertyResolverUtils.isResolveExtensionsProperties()) {
 				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
 				extensionsResolved.forEach(apiResponseObject::addExtension);
@@ -460,7 +460,6 @@ public class OperationService {
 			}
 		}
 	}
-
 
 	/**
 	 * Build response.

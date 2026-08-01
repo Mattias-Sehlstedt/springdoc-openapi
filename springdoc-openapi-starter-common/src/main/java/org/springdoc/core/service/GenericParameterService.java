@@ -312,7 +312,7 @@ public class GenericParameterService {
 			setSchema(parameterDoc, components, jsonView, parameter);
 
 		setExamples(parameterDoc, parameter);
-		setExtensions(parameterDoc, parameter, locale);
+		setExtensions(parameterDoc.extensions(), parameter, locale);
 		setParameterStyle(parameter, parameterDoc);
 		setParameterExplode(parameter, parameterDoc);
 
@@ -538,13 +538,13 @@ public class GenericParameterService {
 	/**
 	 * Sets extensions.
 	 *
-	 * @param parameterDoc the parameter doc
-	 * @param parameter    the parameter
-	 * @param locale       the locale
+	 * @param annotationExtensions the extension annotations
+	 * @param parameter            the parameter
+	 * @param locale               the locale
 	 */
-	private void setExtensions(io.swagger.v3.oas.annotations.Parameter parameterDoc, Parameter parameter, Locale locale) {
-		if (parameterDoc.extensions().length > 0) {
-			Map<String, Object> extensionMap = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), parameterDoc.extensions());
+	private void setExtensions(Extension[] annotationExtensions, Parameter parameter, Locale locale) {
+		if (annotationExtensions.length > 0) {
+			Map<String, Object> extensionMap = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
 			if (propertyResolverUtils.isResolveExtensionsProperties()) {
 				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensionMap);
 				extensionsResolved.forEach(parameter::addExtension);

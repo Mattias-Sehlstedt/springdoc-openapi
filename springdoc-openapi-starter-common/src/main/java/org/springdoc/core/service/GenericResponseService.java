@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.core.util.AnnotationsUtils;
+import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
@@ -391,22 +392,33 @@ public class GenericResponseService implements ApplicationContextAware {
 				}
 				apiResponse.setDescription(propertyResolverUtils.resolve(apiResponseAnnotation.description(), methodAttributes.getLocale()));
 				buildContentFromDoc(components, apiResponsesOp, methodAttributes, apiResponseAnnotation, apiResponse, openapi31);
-				Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), apiResponseAnnotation.extensions());
-				if (!CollectionUtils.isEmpty(extensions)) {
-					if (propertyResolverUtils.isResolveExtensionsProperties()) {
-						Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
-						extensionsResolved.forEach(apiResponse::addExtension);
-					}
-					else {
-						apiResponse.extensions(extensions);
-					}
-				}
+				setExtensions(apiResponseAnnotation.extensions(), apiResponse, locale);
 				SpringDocAnnotationsUtils.getHeaders(apiResponseAnnotation.headers(), components, methodAttributes.getJsonViewAnnotation(), openapi31)
 						.ifPresent(apiResponse::headers);
 				apiResponsesOp.addApiResponse(httpCode, apiResponse);
 			}
 		}
 		return apiResponsesOp;
+	}
+
+	/**
+	 * Sets extensions.
+	 *
+	 * @param annotationExtensions the extension annotations
+	 * @param apiResponse          the apiResponse
+	 * @param locale               the locale
+	 */
+	private void setExtensions(Extension[] annotationExtensions, ApiResponse apiResponse, Locale locale) {
+		Map<String, Object> extensions = AnnotationsUtils.getExtensions(propertyResolverUtils.isOpenapi31(), annotationExtensions);
+		if (!CollectionUtils.isEmpty(extensions)) {
+			if (propertyResolverUtils.isResolveExtensionsProperties()) {
+				Map<String, Object> extensionsResolved = propertyResolverUtils.resolveExtensions(locale, extensions);
+				extensionsResolved.forEach(apiResponse::addExtension);
+			}
+			else {
+				extensions.forEach(apiResponse::addExtension);
+			}
+		}
 	}
 
 	/**
