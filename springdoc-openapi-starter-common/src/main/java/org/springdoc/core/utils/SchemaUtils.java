@@ -544,18 +544,21 @@ public class SchemaUtils {
 	/**
 	 * Find getter method.
 	 *
-	 * @param f the f
+	 * @param field the field
 	 * @return the method
 	 */
-	private static Method findGetter(Field f) {
-		String n = f.getName();
+	private static Method findGetter(Field field) {
+		if (field == null) {
+			return null;
+		}
+		String n = field.getName();
 		String cap = Character.toUpperCase(n.charAt(0)) + n.substring(1);
-		String[] names = (f.getType() == boolean.class || f.getType() == Boolean.class)
+		String[] names = (field.getType() == boolean.class || field.getType() == Boolean.class)
 				? new String[] { "is" + cap, "get" + cap }
 				: new String[] { "get" + cap };
 		for (String m : names) {
 			try {
-				return f.getDeclaringClass().getMethod(m);
+				return field.getDeclaringClass().getMethod(m);
 			} catch (NoSuchMethodException ignored) {
 				// best-effort only
 			}

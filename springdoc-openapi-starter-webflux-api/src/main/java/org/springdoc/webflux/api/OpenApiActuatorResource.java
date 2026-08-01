@@ -133,14 +133,17 @@ public class OpenApiActuatorResource extends OpenApiResource {
 	@Override
 	protected String calculateServerUrl(ServerHttpRequest serverHttpRequest, String apiDocsUrl, Locale locale) {
 		super.initOpenAPIBuilder(locale);
-		URI uri = getActuatorURI(serverHttpRequest.getURI().getScheme(), serverHttpRequest.getURI().getHost());
+		URI uri = getActuatorURI(serverHttpRequest.getURI().getScheme(), serverHttpRequest.getURI().getHost())
+				.orElseThrow(() -> new IllegalArgumentException("Unable to get the actuator uri"));
 		return openAPIService.calculateServerBaseUrl(uri.toString(), serverHttpRequest);
 	}
 
 	@Override
 	protected String getServerUrl(ServerHttpRequest serverHttpRequest, String apiDocsUrl) {
 		URI uri = serverHttpRequest.getURI();
-		return getActuatorURI(uri.getScheme(), uri.getHost()).toString();
+		return getActuatorURI(uri.getScheme(), uri.getHost())
+				.orElseThrow(() -> new IllegalArgumentException("Unable to get the actuator uri"))
+				.toString();
 	}
 
 }

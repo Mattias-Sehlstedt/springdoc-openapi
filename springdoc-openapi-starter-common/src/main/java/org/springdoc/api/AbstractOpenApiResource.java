@@ -1558,11 +1558,8 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	 * @param host   the host
 	 * @return the actuator uri
 	 */
-	protected URI getActuatorURI(String scheme, String host) {
-		final Optional<ActuatorProvider> actuatorProviderOptional = springDocProviders.getActuatorProvider();
-		URI uri = null;
-		if (actuatorProviderOptional.isPresent()) {
-			ActuatorProvider actuatorProvider = actuatorProviderOptional.get();
+	protected Optional<URI> getActuatorURI(String scheme, String host) {
+		return springDocProviders.getActuatorProvider().flatMap(actuatorProvider -> {
 			int port;
 			String path;
 			if (ACTUATOR_DEFAULT_GROUP.equals(this.groupName)) {
@@ -1577,13 +1574,17 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 					path = path + mvcServletPath;
 			}
 			try {
-				uri = new URI(StringUtils.defaultIfEmpty(scheme, "http"), null, StringUtils.defaultIfEmpty(host, "localhost"), port, path, null, null);
+				return Optional.of(new URI(
+						StringUtils.defaultIfEmpty(scheme, "http"),
+						null,
+						StringUtils.defaultIfEmpty(host, "localhost"), port, path, null, null)
+				);
 			}
 			catch (URISyntaxException e) {
 				LOGGER.error("Unable to parse the URL: scheme {}, host {}, port {}, path {}", scheme, host, port, path);
+				return Optional.empty();
 			}
-		}
-		return uri;
+		});
 	}
 
 	/**

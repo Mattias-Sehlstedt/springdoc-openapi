@@ -135,7 +135,9 @@ public class OpenApiActuatorResource extends OpenApiResource {
 
 	@Override
 	protected String getServerUrl(HttpServletRequest request, String apiDocsUrl) {
-		return getActuatorURI(request.getScheme(), request.getServerName()).toString();
+		return getActuatorURI(request.getScheme(), request.getServerName())
+				.orElseThrow(() -> new IllegalArgumentException("Unable to get the actuator uri"))
+				.toString();
 	}
 
 }
