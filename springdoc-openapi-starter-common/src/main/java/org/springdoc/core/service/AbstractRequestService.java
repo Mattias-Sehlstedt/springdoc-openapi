@@ -706,7 +706,7 @@ public abstract class AbstractRequestService {
 			// issue #3270). Copy an inline schema before mutating it, but only when there is a
 			// constraint to apply, to avoid perturbing schemas that are left untouched.
 			if (schema != null && schema.get$ref() == null && SchemaUtils.hasValidationConstraints(annotations)) {
-				schema = cloneViaJson(schema, schema.getClass(), parameterBuilder.getObjectMapperProvider().jsonMapper());
+				schema = cloneViaJson(schema, Schema.class, parameterBuilder.getObjectMapperProvider().jsonMapper());
 				parameter.setSchema(schema);
 			}
 			SchemaUtils.applyValidationsToSchema(schema, annotations, openapiVersion);
