@@ -29,7 +29,11 @@ package org.springdoc.core.configuration;
 import java.util.Optional;
 
 import org.springdoc.core.configuration.hints.SpringDocDataRestHints;
+import org.springdoc.core.converters.CollectionModelContentConverter;
+import org.springdoc.core.converters.HateoasLinksConverter;
 import org.springdoc.core.converters.models.DefaultPageable;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springdoc.core.customizers.OpenApiHateoasLinksCustomizer;
 import org.springdoc.core.data.DataRestOperationService;
 import org.springdoc.core.data.DataRestRequestService;
 import org.springdoc.core.data.DataRestResponseService;
@@ -44,6 +48,7 @@ import org.springdoc.core.service.AbstractRequestService;
 import org.springdoc.core.service.GenericResponseService;
 import org.springdoc.core.service.OpenAPIService;
 import org.springdoc.core.service.OperationService;
+import org.springdoc.core.utils.Constants;
 import org.springdoc.core.utils.SpringDocDataRestUtils;
 import tools.jackson.databind.ObjectMapper;
 
@@ -142,6 +147,65 @@ public class SpringDocDataRestConfiguration {
 			return new DataRestHalProvider(repositoryRestConfiguration, Optional.empty(), objectMapperProvider);
 		}
 
+		/**
+		 * Collection model content converter collection model content converter.
+		 *
+		 * @param dataRestHalProvider  the data rest hal provider
+		 * @param linkRelationProvider the link relation provider
+		 * @return the collection model content converter
+		 */
+		@Bean
+		@ConditionalOnMissingBean
+		@Lazy(false)
+		CollectionModelContentConverter collectionModelContentConverter(DataRestHalProvider dataRestHalProvider, LinkRelationProvider linkRelationProvider) {
+			return dataRestHalProvider.isHalEnabled() ? new CollectionModelContentConverter(linkRelationProvider) : null;
+		}
+
+		/**
+		 * Hateoas links converter hateoas links converter.
+		 *
+		 * @param springDocObjectMapper the spring doc object mapper
+		 * @return the hateoas links converter
+		 */
+		@Bean
+		@ConditionalOnMissingBean
+		@Lazy(false)
+		HateoasLinksConverter dataRestHateoasLinksConverter(ObjectMapperProvider springDocObjectMapper) {
+			return new HateoasLinksConverter(springDocObjectMapper);
+		}
+
+		/**
+		 * Registers an OpenApiCustomizer and a jackson mixin to ensure the definition of `Links` matches the serialized
+		 * output. This is done because the customer serializer converts the data to a map before serializing it.
+		 *
+		 * @param dataRestHalProvider       the hal provider
+		 * @param springDocConfigProperties the spring doc config properties
+		 * @return the open api customizer
+		 */
+		@Bean(Constants.LINKS_SCHEMA_CUSTOMIZER)
+		@ConditionalOnMissingBean(name = Constants.LINKS_SCHEMA_CUSTOMIZER)
+		@Lazy(false)
+		GlobalOpenApiCustomizer linksSchemaCustomizer(DataRestHalProvider dataRestHalProvider, SpringDocConfigProperties springDocConfigProperties) {
+			if (!dataRestHalProvider.isHalEnabled()) {
+				return openApi -> {
+				};
+			}
+			return new OpenApiHateoasLinksCustomizer(springDocConfigProperties);
+		}
+
+	}
+
+	/**
+	 * The type Spring repository rest resource provider configuration.
+	 *
+	 * @param springDocObjectMapper the spring doc object mapper
+	 * @return the hateoas links converter
+	 */
+	@Bean
+	@ConditionalOnMissingBean
+	@Lazy(false)
+	HateoasLinksConverter hateoasLinksConverter(ObjectMapperProvider springDocObjectMapper) {
+		return new HateoasLinksConverter(springDocObjectMapper);
 	}
 
 	/**

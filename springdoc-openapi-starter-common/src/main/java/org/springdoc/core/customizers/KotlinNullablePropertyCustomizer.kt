@@ -86,6 +86,8 @@ class KotlinNullablePropertyCustomizer(
 			val fieldName = prop.name
 			val property = targetSchema.properties[fieldName] ?: continue
 
+			if (isAlreadyNullable(property, specVersion)) continue
+
 			if (property.`$ref` != null) {
 				replacements[fieldName] = wrapRefNullable(property, specVersion)
 			} else {
@@ -96,6 +98,7 @@ class KotlinNullablePropertyCustomizer(
 		replacements.forEach { (name, wrapper) ->
 			targetSchema.properties[name] = wrapper
 		}
+
 
 		return resolvedSchema
 	}
@@ -122,6 +125,21 @@ class KotlinNullablePropertyCustomizer(
 		}
 		val definedModels = context.definedModels
 		return definedModels[javaType.rawClass.name] ?: definedModels[javaType.rawClass.simpleName]
+	}
+
+	/**
+	 * Returns `true` when the property is already nullable, so it is not processed twice.
+	 * This can happen when the same underlying schema is resolved in several passes (for
+	 * example the domain content that is later unwrapped into a Spring HATEOAS model).
+	 * - OAS 3.0: `nullable: true`
+	 * - OAS 3.1: `"null"` present in `types`, or in a `oneOf` alternative of a wrapper
+	 */
+	private fun isAlreadyNullable(property: Schema<*>, specVersion: SpecVersion): Boolean {
+		if (specVersion == SpecVersion.V31) {
+			if (property.types?.contains("null") == true) return true
+			return property.oneOf?.any { it.types?.contains("null") == true } == true
+		}
+		return property.nullable == true
 	}
 
 	/**
@@ -164,8 +182,15 @@ class KotlinNullablePropertyCustomizer(
 	/**
 	 * Copies the attributes swagger-core may set as siblings of a `$ref` property onto the
 	 * nullable wrapper, so annotations like `@Schema(description = ...)` survive.
+	 *
+	 * The schema `name` is copied as well: swagger keys unwrapped (`@JsonUnwrapped`) content
+	 * properties - such as the domain content inlined into a Spring HATEOAS `EntityModel` - by
+	 * the child schema's name. Dropping it would produce a `null` property key and the property
+	 * would be lost from the composed model. See
+	 * https://github.com/springdoc/springdoc-openapi/issues/3263
 	 */
 	private fun copySiblingMetadata(source: Schema<*>, target: Schema<*>) {
+		source.name?.let { target.name = it }
 		source.description?.let { target.description = it }
 		source.title?.let { target.title = it }
 		source.deprecated?.let { target.deprecated = it }
