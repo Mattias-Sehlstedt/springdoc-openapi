@@ -30,7 +30,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.test.context.TestPropertySource;
 import test.org.springdoc.api.v30.AbstractSpringDocTest;
 
-@TestPropertySource(properties = "spring.data.rest.base-path=/api")
+@TestPropertySource(properties = {
+		"spring.data.rest.base-path=/api",
+		"springdoc.enable-hateoas=false"
+})
 public class SpringDocApp40Test extends AbstractSpringDocTest {
 
 	@SpringBootApplication
