@@ -25,6 +25,7 @@
 package test.org.springdoc.api.v30.app70.model;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,5 +36,9 @@ public class ApiType {
 	@Schema(description = "Test description")
 	@JsonProperty("someProperty")
 	private Duration someProperty;
+
+	@Schema(description = "Test description")
+	@JsonProperty("someOptionalProperty")
+	private Optional<@CustomizedProperty Duration> someOptionalProperty;
 
 }

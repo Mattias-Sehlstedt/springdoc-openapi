@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The MCP dashboard no longer pre-fills the OAuth2 token endpoint, client id and client secret. The form shows hints instead, and warns when the token endpoint is not HTTPS
 
+### Added
+
+- `ParameterCustomizer` now receive the type-use annotation data declared on a value wrapped in an `Optional`, so annotations such as `Optional<@MyAnnotation Foo>` can be read natively by it
+
 ## [3.1.1] - 2026-09-06
 
 ### Security
