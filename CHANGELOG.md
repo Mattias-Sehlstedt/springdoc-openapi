@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The MCP dashboard no longer pre-fills the OAuth2 token endpoint, client id and client secret. The form shows hints instead, and warns when the token endpoint is not HTTPS
+- Add `springdoc.model-converters.polymorphic-converter.one-of-as-ref` property to emit discovered polymorphic `oneOf` unions as reusable component schemas referenced via `$ref`
+- Add `springdoc.model-converters.polymorphic-converter.one-of-ref-suffix` property to customize the suffix of the generated `oneOf` component schema names (defaults to `Variant`, e.g. `PetVariant`)
 
 ## [3.1.1] - 2026-09-06
 
